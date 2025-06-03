@@ -2,6 +2,8 @@ package com.example.frontstore.data.remote.api
 
 import com.example.frontstore.data.model.LoginResponseDto
 import com.example.frontstore.data.model.UsuarioDto
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface UsuarioApi {
     @POST("usuarios/login")

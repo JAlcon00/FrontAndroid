@@ -1,17 +1,21 @@
 package com.example.frontstore.data.remote.network
 
-import androidx.test.espresso.core.internal.deps.dagger.Module
-import androidx.test.espresso.core.internal.deps.dagger.Provides
 import com.example.frontstore.data.remote.api.ArticuloApi
 import com.example.frontstore.data.remote.api.CategoriaApi
 import com.example.frontstore.data.remote.api.PedidoApi
 import com.example.frontstore.data.remote.api.UsuarioApi
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideRetrofit(): Retrofit = RetrofitClient.retrofit
 
     @Provides @Singleton
