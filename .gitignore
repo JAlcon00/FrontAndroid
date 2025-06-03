@@ -1,15 +1,59 @@
+# Android Studio / IntelliJ IDEA
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.gradle/
+.idea/
 local.properties
+*.log
+captures/
+outputs/
+build/
+
+# Archivos de compilación de Gradle
+.gradle/
+/build
+
+# Archivos generados por Android
+/app/build/
+/app/.cxx/
+caches/
+
+# Dependencias de Kotlin
+*.kotlin_module
+
+# Configuración de empaquetado
+*.keystore
+
+# Archivos de IDE específicos
+.DS_Store
+*.swp
+
+# Archivos de certificación de firma
+*.jks
+*.keystore
+
+# Archivos temporales de sistema
+*.tmp
+*.bak
+
+# Configuraciones de prueba
+.externalNativeBuild
+
+# Dependencias de librerías
+/.idea/
+/captures/
+/output.json
+
+# Proguard/R8
+/proguard/
+
+# Archivos de Jetpack Compose
+# (normalmente no se generan, pero si usas caching específico de tu IDE)
+.kotlin_module
+
+# Otros ignore generales
+gradle-app.setting
+gradle-app.setting.*
+
+# Si añadieras archivos con claves o credenciales, ignóralos aquí:
+# e.g. api-keys.properties
+
