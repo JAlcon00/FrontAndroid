@@ -12,8 +12,6 @@ import androidx.navigation.NavController
 import com.example.frontstore.presentation.components.BotonPrincipal
 import com.example.frontstore.presentation.viewmodel.AuthViewModel
 
-LoginScreeen
-
 @Composable
 fun LoginScreen(
     navController: NavController,
