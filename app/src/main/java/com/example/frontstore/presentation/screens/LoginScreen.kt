@@ -12,6 +12,8 @@ import androidx.navigation.NavController
 import com.example.frontstore.presentation.components.BotonPrincipal
 import com.example.frontstore.presentation.viewmodel.AuthViewModel
 
+LoginScreeen
+
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -21,13 +23,32 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(32.dp),
+                .padding(top = 64.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Logo
+            Icon(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground), // Reemplaza por tu logo
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(bottom = 24.dp)
+            )
+
+            Text(
+                text = "Inicia sesión",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -43,13 +64,19 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(24.dp))
+
             if (uiState.isLoading) {
                 CircularProgressIndicator()
             }
+
             if (uiState.error != null) {
-                Text(text = uiState.error, color = MaterialTheme.colorScheme.error)
-                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = uiState.error,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
             }
+
             BotonPrincipal(
                 texto = "Iniciar sesión",
                 onClick = { viewModel.login(email, password) },
@@ -57,7 +84,7 @@ fun LoginScreen(
             )
         }
     }
-    // Navegación tras login exitoso
+
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
             navController.navigate("listaArticulos") {
