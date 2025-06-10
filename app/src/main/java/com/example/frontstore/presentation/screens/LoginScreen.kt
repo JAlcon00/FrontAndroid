@@ -61,7 +61,13 @@ fun LoginScreen(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Correo electrónico", color = Violet) },
-                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Violet) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
+                        contentDescription = null,
+                        tint = Violet
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -76,7 +82,13 @@ fun LoginScreen(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Contraseña", color = Violet) },
-                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Violet) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = Violet
+                    )
+                },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
