@@ -16,74 +16,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.frontstore.ui.theme.*
-
-
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.material3.CircularProgressIndicator
 
 @Composable
-fun FavoritosScreen() {
-    val favoritosAnime = listOf(
-        Triple(
-            "Playera Naruto",
-            "https://via.placeholder.com/150",
-            "$299" to "Playera de algodón con estampado de Naruto. Esta playera es perfecta para los fans del anime, cómoda para el día a día y con un diseño exclusivo que destaca entre la multitud. ¡No te quedes sin la tuya y muestra tu pasión por Naruto en cualquier ocasión!"
-        ),
-        Triple(
-            "Sudadera One Piece",
-            "https://via.placeholder.com/150",
-            "$599" to "Sudadera cómoda con logo de One Piece."
-        ),
-        Triple(
-            "Taza Attack on Titan",
-            "https://via.placeholder.com/150",
-            "$199" to "Taza de cerámica edición especial AOT."
-        )
-    )
-    val favoritosPeliculas = listOf(
-        Triple(
-            "Camiseta Star Wars",
-            "https://via.placeholder.com/150",
-            "$349" to "Camiseta oficial de Star Wars, edición limitada."
-        ),
-        Triple(
-            "Taza Harry Potter",
-            "https://via.placeholder.com/150",
-            "$179" to "Taza mágica con el logo de Hogwarts."
-        ),
-        Triple(
-            "Gorra Marvel",
-            "https://via.placeholder.com/150",
-            "$259" to "Gorra ajustable con logo de Marvel."
-        )
-    )
-    val favoritosVideojuegos = listOf(
-        Triple(
-            "GTA 6",
-            "https://via.placeholder.com/150",
-            "$1599" to "Grand Theft Auto VI para PS5/Xbox, la nueva entrega de la saga más exitosa de mundo abierto. ¡Reserva ya y sé de los primeros en jugar!"
-        ),
-        Triple(
-            "Playera Zelda",
-            "https://via.placeholder.com/150",
-            "$329" to "Playera oficial de The Legend of Zelda, edición Breath of the Wild."
-        ),
-        Triple(
-            "Taza Mario Bros",
-            "https://via.placeholder.com/150",
-            "$189" to "Taza de cerámica con diseño de Mario y Luigi."
-        ),
-        Triple(
-            "Gorra Pokémon",
-            "https://via.placeholder.com/150",
-            "$249" to "Gorra ajustable con logo de Pikachu."
-        )
-    )
+fun FavoritosScreen(
+    viewModel: ArticuloViewModel = hiltViewModel()
+) {
+    val articulos by viewModel.articulos.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
+    val favoritos = articulos.filter { it.activo /* o tu lógica de favorito */ }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Black)
     ) {
-        // Fondo gradiente superior
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -95,7 +47,6 @@ fun FavoritosScreen() {
                 )
                 .align(Alignment.TopCenter)
         )
-        // Título principal
         Text(
             text = "Tus favoritos",
             style = MaterialTheme.typography.headlineMedium,
@@ -104,185 +55,79 @@ fun FavoritosScreen() {
                 .align(Alignment.TopCenter)
                 .padding(top = 64.dp)
         )
-        // Carruseles apilados
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .padding(top = 180.dp)
-        ) {
-            Text(
-                text = "Favoritos de anime",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-            )
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(favoritosAnime) { (titulo, imagenUrl, precioDesc) ->
-                    val (precio, descripcion) = precioDesc
-                    Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        color = CardBg,
-                        shadowElevation = 6.dp,
-                        border = null,
-                        modifier = Modifier
-                            .width(220.dp)
-                            .height(170.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(70.dp)
-                                    .background(Violet, RoundedCornerShape(12.dp))
-                            ) {
-                                // Aquí iría la imagen
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = titulo,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                maxLines = 1
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = descripcion,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondary,
-                                maxLines = 2
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = precio,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = PricePurple
-                            )
-                        }
-                    }
-                }
+        when {
+            loading -> {
+                CircularProgressIndicator(
+                    color = PricePurple,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Favoritos de películas",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-            )
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(favoritosPeliculas) { (titulo, imagenUrl, precioDesc) ->
-                    val (precio, descripcion) = precioDesc
-                    Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        color = CardBg,
-                        shadowElevation = 6.dp,
-                        border = null,
-                        modifier = Modifier
-                            .width(220.dp)
-                            .height(170.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(16.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(70.dp)
-                                    .background(Violet, RoundedCornerShape(12.dp))
-                            ) {
-                                // Aquí iría la imagen
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = titulo,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                maxLines = 1
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = descripcion,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondary,
-                                maxLines = 2
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = precio,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = PricePurple
-                            )
-                        }
-                    }
-                }
+            error != null -> {
+                Text(
+                    text = error ?: "Error desconocido",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.Center)
+                )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Videojuegos",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White,
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
-            )
-            LazyRow(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(favoritosVideojuegos) { (titulo, imagenUrl, precioDesc) ->
-                    val (precio, descripcion) = precioDesc
-                    Surface(
-                        shape = RoundedCornerShape(16.dp),
-                        color = CardBg,
-                        shadowElevation = 6.dp,
-                        border = null,
-                        modifier = Modifier
-                            .width(220.dp)
-                            .height(170.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(16.dp)
+            favoritos.isEmpty() -> {
+                Text(
+                    text = "No tienes favoritos aún",
+                    color = PricePurple,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+            else -> {
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .padding(top = 180.dp)
+                ) {
+                    items(favoritos) { articulo ->
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = CardBg,
+                            shadowElevation = 6.dp,
+                            border = null,
+                            modifier = Modifier
+                                .width(220.dp)
+                                .height(170.dp)
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(70.dp)
-                                    .background(Violet, RoundedCornerShape(12.dp))
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.padding(16.dp)
                             ) {
-                                // Aquí iría la imagen
+                                Box(
+                                    modifier = Modifier
+                                        .size(70.dp)
+                                        .background(Violet, RoundedCornerShape(12.dp))
+                                ) {
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = articulo.nombre,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.White,
+                                    maxLines = 1
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = articulo.descripcion,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextSecondary,
+                                    maxLines = 2
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "$${articulo.precio}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = PricePurple
+                                )
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = titulo,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                maxLines = 1
-                            )
-                            Spacer(modifier = Modifier.height(2.dp))
-                            Text(
-                                text = descripcion,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TextSecondary,
-                                maxLines = 2
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Text(
-                                text = precio,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = PricePurple
-                            )
                         }
                     }
                 }

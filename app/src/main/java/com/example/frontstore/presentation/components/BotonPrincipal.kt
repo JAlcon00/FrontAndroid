@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.frontstore.ui.theme.DeepPurple
 
 @Composable
 fun BotonPrincipal(
@@ -24,7 +25,7 @@ fun BotonPrincipal(
         enabled = enabled,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFF6F00), // Color naranja
+            containerColor = DeepPurple,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(12.dp),
