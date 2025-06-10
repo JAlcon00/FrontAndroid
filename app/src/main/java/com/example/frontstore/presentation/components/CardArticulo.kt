@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.example.frontstore.ui.theme.PricePurple
 
 @Composable
 fun CardArticulo(
@@ -33,7 +34,7 @@ fun CardArticulo(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = PricePurple
         )
     ) {
         Row(
