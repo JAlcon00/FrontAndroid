@@ -1,16 +1,28 @@
 package com.example.frontstore.presentation.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -67,7 +79,136 @@ fun CardArticulo(
             }
         }
     }
+}
 
+
+
+// --- Pantalla principal previewable ---
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ListaArticulosScreenPreviewable(uiState: ArticuloUiState) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .background(Color.White)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "FontStore",
+                color = Color(0xFF6200EE), // Verde brillante (hex)
+                fontSize = 30.sp,
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.weight(1f)
+            )
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFCDC6D9)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = "Ir",
+                    tint = Color(0xFF6200EE)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+
+
+
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            placeholder = { Text("Buscar...") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp)),
+            shape = RoundedCornerShape(16.dp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6200EE),
+                unfocusedBorderColor = Color(0xFF6200EE),
+                cursorColor = Color(0xFF6200EE),
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.DarkGray,
+                containerColor = Color.White,
+            )
+        )
+
+
+
+
+
+
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFFE5DEEA)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Imagen destacada", color = Color.DarkGray)
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Categorías",
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(start = 2.dp, bottom = 8.dp)
+        )
+
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(listOf("Ropa", "Zapatos", "Accesorios")) { categoria ->
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .height(35.dp)
+                        .background(Color(0xFFE0E0E0))
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(text = categoria)
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        val articulosFiltrados = uiState.articulos.filter {
+            searchQuery.isBlank() || it.titulo.contains(searchQuery, ignoreCase = true)
+        }
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(articulosFiltrados) { articulo ->
+                CardArticulo(
+                    titulo = articulo.titulo,
+                    imagenUrl = articulo.imagenUrl,
+                    precio = articulo.precio,
+                    onClick = {}
+                )
+            }
+        }
+    }
 }
 
 
