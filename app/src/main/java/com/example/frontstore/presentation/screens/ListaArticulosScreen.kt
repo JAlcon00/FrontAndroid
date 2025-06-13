@@ -12,49 +12,64 @@ import androidx.navigation.NavController
 import com.example.frontstore.presentation.components.CardArticulo
 import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
 
-@Composable
-fun ListaArticulosScreen(
-    navController: NavController,
-    viewModel: ArticuloViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
+// --- Modelo y estado ---
+data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
 
-    LaunchedEffect(Unit) {
-        viewModel.cargarArticulos()
-    }
+data class ArticuloUiState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val articulos: List<Articulo> = emptyList()
+)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        when {
-            uiState.loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-            uiState.error != null -> {
-                Column(
-                    modifier = Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = uiState.error, color = MaterialTheme.colorScheme.error)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = { viewModel.cargarArticulos() }) {
-                        Text("Reintentar")
-                    }
-                }
-            }
-            uiState.articulos.isNotEmpty() -> {
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(uiState.articulos.size) { idx ->
-                        val articulo = uiState.articulos[idx]
-                        CardArticulo(
-                            titulo = articulo.titulo,
-                            imagenUrl = articulo.imagenUrl,
-                            precio = articulo.precio,
-                            onClick = {
-                                navController.navigate("detalleArticulo/${articulo.id}")
-                            }
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
+
+
+
+
+
+
+//@Composable
+//fun ListaArticulosScreen(
+//    navController: NavController,
+//    viewModel: ArticuloViewModel = hiltViewModel()
+//) {
+//    val uiState by viewModel.uiState.collectAsState()
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.cargarArticulos()
+//    }
+//
+//    Box(modifier = Modifier.fillMaxSize()) {
+//        when {
+//            uiState.loading -> {
+//                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+//            }
+//            uiState.error != null -> {
+//                Column(
+//                    modifier = Modifier.align(Alignment.Center),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(text = uiState.error, color = MaterialTheme.colorScheme.error)
+//                    Spacer(modifier = Modifier.height(8.dp))
+//                    Button(onClick = { viewModel.cargarArticulos() }) {
+//                        Text("Reintentar")
+//                    }
+//                }
+//            }
+//            uiState.articulos.isNotEmpty() -> {
+//                LazyColumn(modifier = Modifier.fillMaxSize()) {
+//                    items(uiState.articulos.size) { idx ->
+//                        val articulo = uiState.articulos[idx]
+//                        CardArticulo(
+//                            titulo = articulo.titulo,
+//                            imagenUrl = articulo.imagenUrl,
+//                            precio = articulo.precio,
+//                            onClick = {
+//                                navController.navigate("detalleArticulo/${articulo.id}")
+//                            }
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
