@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -209,6 +210,22 @@ fun ListaArticulosScreenPreviewable(uiState: ArticuloUiState) {
             }
         }
     }
+}
+
+
+// --- Preview ---
+@Preview(showBackground = true)
+@Composable
+fun ListaArticulosScreenPreview() {
+    val mockArticulos = listOf(
+        Articulo("1", "Camisa Blanca", "https://via.placeholder.com/150", 25.99),
+        Articulo("2", "Pantalón Negro", "https://via.placeholder.com/150", 45.50),
+        Articulo("3", "Zapatos de Cuero", "https://via.placeholder.com/150", 89.00),
+        Articulo("4", "Camisa Blanca", "https://via.placeholder.com/150", 25.99)
+    )
+    val mockUiState = ArticuloUiState(articulos = mockArticulos)
+
+    ListaArticulosScreenPreviewable(uiState = mockUiState)
 }
 
 
