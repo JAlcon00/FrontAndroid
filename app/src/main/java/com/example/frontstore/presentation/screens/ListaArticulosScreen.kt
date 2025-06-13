@@ -3,16 +3,11 @@ package com.example.frontstore.presentation.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,12 +18,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.frontstore.presentation.components.CardArticulo
-import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.sp
 
 // --- Modelo y estado ---
 data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
@@ -38,8 +36,6 @@ data class ArticuloUiState(
     val error: String? = null,
     val articulos: List<Articulo> = emptyList()
 )
-
-
 
 
 // --- Componente de tarjeta ---
@@ -80,9 +76,8 @@ fun CardArticulo(
             }
         }
     }
+
 }
-
-
 
 // --- Pantalla principal previewable ---
 @OptIn(ExperimentalMaterial3Api::class)
@@ -227,6 +222,7 @@ fun ListaArticulosScreenPreview() {
 
     ListaArticulosScreenPreviewable(uiState = mockUiState)
 }
+
 
 
 
