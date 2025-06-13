@@ -1,22 +1,32 @@
-//package com.example.frontstore.presentation.screens
-//
-//import androidx.compose.foundation.Image
-//import androidx.compose.foundation.layout.*
-//import androidx.compose.material3.*
-//import androidx.compose.runtime.*
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.layout.ContentScale
-//import androidx.compose.ui.unit.dp
-//import androidx.hilt.navigation.compose.hiltViewModel
-//import androidx.navigation.NavController
-//import coil.compose.rememberAsyncImagePainter
-//
+package com.example.frontstore.presentation.screens
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+
+// --- Modelo y estado ---
+data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
+
+data class ArticuloUiState(
+    val loading: Boolean = false,
+    val error: String? = null,
+    val articulos: List<Articulo> = emptyList()
+)
+
+
+
+
 //@Composable
 //fun DetalleArticuloScreen(
-//    navController: NavController,
-//    idArticulo: String,
-//    viewModel: DetalleArticuloViewModel = hiltViewModel()
+//    articulo: Articulo
 //) {
 //    val uiState by viewModel.uiState.collectAsState()
 //
