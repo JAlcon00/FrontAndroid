@@ -5,4 +5,7 @@ import kotlinx.serialization.Serializable
 sealed class Screens() {
     @Serializable
     object LoginScreenRoute : Screens()
+
+    @Serializable
+    object RegisterScreenRoute : Screens()
 }

@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.screens.auth.LoginScreen
+import com.example.frontstore.presentation.screens.auth.RegistroScreen
 import com.example.frontstore.ui.theme.FrontStoreTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,6 +53,9 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
                     composable<Screens.LoginScreenRoute> {
                         LoginScreen(navController = navController)
+                    }
+                    composable<Screens.RegisterScreenRoute> {
+                        RegistroScreen(navController = navController)
                     }
                 }
             }

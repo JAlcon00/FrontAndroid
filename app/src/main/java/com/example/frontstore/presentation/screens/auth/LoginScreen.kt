@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.viewmodel.AuthViewModel
 import com.example.frontstore.ui.theme.Black
 import com.example.frontstore.ui.theme.DeepPurple
@@ -113,10 +114,12 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.End
             ) {
                 Text(
-                    text = "¿Olvidaste tu contraseña?",
+                    text = "¿No tienes una cuenta? Crea una",
                     color = PricePurple, // Morado claro
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.clickable { /* Acción de recuperación */ }
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screens.RegisterScreenRoute)
+                    }
                 )
             }
 //            if (uiState.error != null) {

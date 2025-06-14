@@ -24,8 +24,7 @@ import com.example.frontstore.ui.theme.Violet
 
 @Composable
 fun RegistroScreen(
-    navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    navController: NavController
 ) {
     var nombre by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
