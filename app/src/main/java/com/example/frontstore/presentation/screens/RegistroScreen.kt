@@ -1,12 +1,11 @@
 package com.example.frontstore.presentation.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,15 +21,18 @@ import com.example.frontstore.ui.theme.Black
 import com.example.frontstore.ui.theme.DeepPurple
 import com.example.frontstore.ui.theme.PricePurple
 import com.example.frontstore.ui.theme.Violet
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun LoginScreen(
+fun RegistroScreen(
     navController: NavController,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsState()
+    val contrasenasIguales = password == confirmPassword && password.isNotEmpty()
 
     Box(
         modifier = Modifier
@@ -44,35 +46,24 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Logo
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .background(Color.Transparent),
-                contentAlignment = Alignment.Center
-            ) {
-                // Aquí puedes poner tu Image
-                // Ejemplo: Image(painterResource(id = R.drawable.tu_logo), contentDescription = "Logo")
-            }
             Text(
-                text = "Bienvenido",
+                text = "Crear cuenta",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = PricePurple // Morado claro
+                color = PricePurple
             )
             Text(
-                text = "Inicia sesión para continuar",
+                text = "Regístrate para continuar",
                 style = MaterialTheme.typography.bodyMedium,
                 color = Violet
             )
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Correo electrónico", color = Violet) },
+                value = nombre,
+                onValueChange = { nombre = it },
+                label = { Text("Nombre", color = Violet) },
                 leadingIcon = {
                     Icon(
-                        Icons.Default.Email,
+                        Icons.Default.Person,
                         contentDescription = null,
                         tint = Violet
                     )
@@ -109,15 +100,33 @@ fun LoginScreen(
                     cursorColor = Violet
                 )
             )
-            Row(
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirmar contraseña", color = Violet) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = Violet
+                    )
+                },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Violet,
+                    unfocusedBorderColor = DeepPurple,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Violet
+                )
+            )
+            if (!contrasenasIguales && confirmPassword.isNotEmpty()) {
                 Text(
-                    text = "¿Olvidaste tu contraseña?",
-                    color = PricePurple, // Morado claro
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.clickable { /* Acción de recuperación */ }
+                    text = "Las contraseñas no coinciden",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
             if (uiState.error != null) {
@@ -131,25 +140,26 @@ fun LoginScreen(
                 CircularProgressIndicator(color = PricePurple)
             } else {
                 Button(
-                    onClick = { viewModel.login(email, password) },
+                    onClick = { viewModel.register(nombre, password) },
+                    enabled = contrasenasIguales && nombre.isNotEmpty(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple) // Morado oscuro llamativo
+                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple)
                 ) {
-                    Text("Iniciar sesión", color = Color.White)
+                    Text("Registrarse", color = Color.White)
                 }
             }
-            TextButton(onClick = { /* Acción de registro */ }) {
-                Text("¿No tienes cuenta? Regístrate", color = PricePurple) // Morado claro
+            TextButton(onClick = { navController.popBackStack() }) {
+                Text("¿Ya tienes cuenta? Inicia sesión", color = PricePurple)
             }
         }
     }
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
-            navController.navigate("listaArticulos") {
-                popUpTo("login") { inclusive = true }
+            navController.navigate("login") {
+                popUpTo("registro") { inclusive = true }
             }
         }
     }
