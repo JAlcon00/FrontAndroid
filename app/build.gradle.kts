@@ -6,6 +6,8 @@ plugins {
     // Plugin de Hilt (asegúrate de que coincide con la versión que usas)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
 android {
@@ -64,6 +66,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.56.2")
     ksp("com.google.dagger:dagger-compiler:2.56.2")
     ksp("com.google.dagger:hilt-android-compiler:2.56.2")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // Soporte para inyectar ViewModels en Compose
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
