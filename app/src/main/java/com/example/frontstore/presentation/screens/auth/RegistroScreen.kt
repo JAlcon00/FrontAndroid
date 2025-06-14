@@ -30,7 +30,7 @@ fun RegistroScreen(
     var nombre by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+    //val uiState by viewModel.uiState.collectAsState()
     val contrasenasIguales = password == confirmPassword && password.isNotEmpty()
 
     Box(
@@ -128,38 +128,38 @@ fun RegistroScreen(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            if (uiState.error != null) {
-                Text(
-                    text = uiState.error,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            if (uiState.isLoading) {
-                CircularProgressIndicator(color = PricePurple)
-            } else {
-                Button(
-                    onClick = { viewModel.register(nombre, password) },
-                    enabled = contrasenasIguales && nombre.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple)
-                ) {
-                    Text("Registrarse", color = Color.White)
-                }
-            }
-            TextButton(onClick = { navController.popBackStack() }) {
-                Text("¿Ya tienes cuenta? Inicia sesión", color = PricePurple)
-            }
+//            if (uiState.error != null) {
+//                Text(
+//                    text = uiState.error,
+//                    color = MaterialTheme.colorScheme.error,
+//                    style = MaterialTheme.typography.bodySmall
+//                )
+//            }
+//            if (uiState.isLoading) {
+//                CircularProgressIndicator(color = PricePurple)
+//            } else {
+//                Button(
+//                    onClick = { viewModel.register(nombre, password) },
+//                    enabled = contrasenasIguales && nombre.isNotEmpty(),
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(50.dp),
+//                    shape = RoundedCornerShape(12.dp),
+//                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple)
+//                ) {
+//                    Text("Registrarse", color = Color.White)
+//                }
+//            }
+//            TextButton(onClick = { navController.popBackStack() }) {
+//                Text("¿Ya tienes cuenta? Inicia sesión", color = PricePurple)
+//            }
         }
     }
-    LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) {
-            navController.navigate("login") {
-                popUpTo("registro") { inclusive = true }
-            }
-        }
-    }
+//    LaunchedEffect(uiState.isSuccess) {
+//        if (uiState.isSuccess) {
+//            navController.navigate("login") {
+//                popUpTo("registro") { inclusive = true }
+//            }
+//        }
+//    }
 }

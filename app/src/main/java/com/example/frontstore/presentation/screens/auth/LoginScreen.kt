@@ -25,12 +25,11 @@ import com.example.frontstore.ui.theme.Violet
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    navController: NavController
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val uiState by viewModel.uiState.collectAsState()
+    //val uiState by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -120,37 +119,37 @@ fun LoginScreen(
                     modifier = Modifier.clickable { /* Acción de recuperación */ }
                 )
             }
-            if (uiState.error != null) {
-                Text(
-                    text = uiState.error,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            if (uiState.isLoading) {
-                CircularProgressIndicator(color = PricePurple)
-            } else {
-                Button(
-                    onClick = { viewModel.login(email, password) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple) // Morado oscuro llamativo
-                ) {
-                    Text("Iniciar sesión", color = Color.White)
-                }
-            }
-            TextButton(onClick = { /* Acción de registro */ }) {
-                Text("¿No tienes cuenta? Regístrate", color = PricePurple) // Morado claro
-            }
+//            if (uiState.error != null) {
+//                Text(
+//                    text = uiState.error,
+//                    color = MaterialTheme.colorScheme.error,
+//                    style = MaterialTheme.typography.bodySmall
+//                )
+//            }
+//            if (uiState.isLoading) {
+//                CircularProgressIndicator(color = PricePurple)
+//            } else {
+//                Button(
+//                    onClick = { viewModel.login(email, password) },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(50.dp),
+//                    shape = RoundedCornerShape(12.dp),
+//                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple) // Morado oscuro llamativo
+//                ) {
+//                    Text("Iniciar sesión", color = Color.White)
+//                }
+//            }
+//            TextButton(onClick = { /* Acción de registro */ }) {
+//                Text("¿No tienes cuenta? Regístrate", color = PricePurple) // Morado claro
+//            }
         }
     }
-    LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) {
-            navController.navigate("listaArticulos") {
-                popUpTo("login") { inclusive = true }
-            }
-        }
-    }
+//    LaunchedEffect(uiState.isSuccess) {
+//        if (uiState.isSuccess) {
+//            navController.navigate("listaArticulos") {
+//                popUpTo("login") { inclusive = true }
+//            }
+//        }
+//    }
 }
