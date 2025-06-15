@@ -42,7 +42,7 @@ fun LoginScreen(
             if (result != "Success") {
                 // Ocurrio un error
                 showErrorDialog = true
-                errorMessage = result
+                errorMessage = "Credenciales invalidas"
             } else {
                 // Esta correcto, navegar a la pantalla principal
                 navController.navigate(Screens.ListaArticulosScreenRoute)

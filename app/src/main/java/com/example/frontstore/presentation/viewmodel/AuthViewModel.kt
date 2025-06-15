@@ -33,13 +33,25 @@ class AuthViewModel @Inject constructor(
             password = password
         )
         viewModelScope.launch {
-            val response = loginUseCase(loginAuth = loginAuth)
-            if (response.message == "Login exitoso") {
-                // Se logueo correctamente
-                _loginEvent.emit("Success")
-            } else {
-                // Hubo un error
-                _loginEvent.emit(response.message)
+            try {
+                val response = loginUseCase(loginAuth = loginAuth)
+                if (response.message == "Login exitoso") {
+                    // Login exitoso
+                    _loginEvent.emit("Success")
+                } else {
+                    // Login fallido, emitir mensaje genérico
+                    _loginEvent.emit("Credenciales inválidas")
+                }
+            } catch (e: retrofit2.HttpException) {
+                // Manejo de errores HTTP
+                if (e.code() == 401) {
+                    _loginEvent.emit("Credenciales inválidas")
+                } else {
+                    _loginEvent.emit("Error en el servidor: ${e.message}")
+                }
+            } catch (e: Exception) {
+                // Manejo de excepciones generales
+                _loginEvent.emit("Error desconocido: ${e.message}")
             }
         }
     }
@@ -60,7 +72,7 @@ class AuthViewModel @Inject constructor(
                 _registerEvent.emit("Success")
             } else {
                 // Hubo un error
-                _registerEvent.emit(response.message)
+                _registerEvent.emit("Error al registrar")
             }
         }
     }
