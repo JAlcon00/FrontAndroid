@@ -24,14 +24,8 @@ class AuthViewModel @Inject constructor(
     private val _registerEvent = MutableSharedFlow<String>()
     val registerEvent = _registerEvent.asSharedFlow()
 
-    private val _user = MutableStateFlow<Usuario?>(null)
-    val user: StateFlow<Usuario?> = _user.asStateFlow()
-
-    private val _loading = MutableStateFlow(false)
-    val loading: StateFlow<Boolean> = _loading.asStateFlow()
-
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
+    private val _loginEvent = MutableSharedFlow<String>()
+    val loginEvent = _loginEvent.asSharedFlow()
 
     fun login(email: String, password: String) {
         val loginAuth = loginAuth(
@@ -39,7 +33,14 @@ class AuthViewModel @Inject constructor(
             password = password
         )
         viewModelScope.launch {
-
+            val response = loginUseCase(loginAuth = loginAuth)
+            if (response.message == "Login exitoso") {
+                // Se logueo correctamente
+                _loginEvent.emit("Success")
+            } else {
+                // Hubo un error
+                _loginEvent.emit(response.message)
+            }
         }
     }
 
