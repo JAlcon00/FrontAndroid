@@ -30,6 +30,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val viewModel : AuthViewModel = hiltViewModel()
     //val uiState by viewModel.uiState.collectAsState()
 
     Box(
