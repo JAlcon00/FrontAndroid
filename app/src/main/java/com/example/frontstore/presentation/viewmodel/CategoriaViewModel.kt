@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontstore.domain.model.Categoria
@@ -29,8 +30,17 @@ class CategoriaViewModel @Inject constructor(
             _loading.value = true
             _error.value = null
             try {
-                val list = getCategoriasUseCase()
-                _categorias.value = list
+                val categoriaList = getCategoriasUseCase().map { categoriaDto ->
+                    Categoria(
+                        id = categoriaDto._id,
+                        nombre = categoriaDto.nombre,
+                        descripcion = categoriaDto.descripcion,
+                        fechaCreacion = categoriaDto.fechaCreacion,
+                        activo = categoriaDto.activo,
+                    )
+                }
+                _categorias.value = categoriaList
+                Log.d("CategoriaViewModel", "Categorías actualizadas en _categorias: ${_categorias.value}")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar categorías"
             } finally {

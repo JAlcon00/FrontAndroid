@@ -30,7 +30,6 @@ class ArticuloViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
 
     fun loadArticulos() {
-        var articulosList: List<Articulo> = emptyList()
         viewModelScope.launch {
             _loading.value = true
             _error.value = null

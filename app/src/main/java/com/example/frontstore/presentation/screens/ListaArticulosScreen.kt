@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
+import com.example.frontstore.presentation.viewmodel.CategoriaViewModel
 
 // --- Componente de tarjeta ---
 @Composable
@@ -84,16 +85,21 @@ fun ListaArticulosScreenPreviewable(
     var searchQuery by remember { mutableStateOf("") }
 
     val viewModel : ArticuloViewModel = hiltViewModel()
+    val categoriaViewModel : CategoriaViewModel = hiltViewModel()
 
     val articulos by viewModel.articulos.collectAsState()
+    val categorias by categoriaViewModel.categorias.collectAsState()
+
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
 
     LaunchedEffect(key1 = true) {
         viewModel.loadArticulos()
+        categoriaViewModel.loadCategorias()
     }
 
     val articuloRandom = if (articulos.isNotEmpty()) articulos.random() else null
+    Log.d("ListaArticulosScreen", "Artículos cargados: ${articulos.size}, Categorías: ${categorias}")
 
     Column(
         modifier = Modifier
