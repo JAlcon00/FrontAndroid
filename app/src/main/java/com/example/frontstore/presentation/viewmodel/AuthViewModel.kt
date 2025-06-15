@@ -2,6 +2,7 @@ package com.example.frontstore.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frontstore.data.model.loginAuth
 import com.example.frontstore.data.model.registerAuth
 import com.example.frontstore.domain.model.Usuario
 import com.example.frontstore.domain.upercase.LoginUsuarioUseCase
@@ -33,17 +34,12 @@ class AuthViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
 
     fun login(email: String, password: String) {
+        val loginAuth = loginAuth(
+            email = email,
+            password = password
+        )
         viewModelScope.launch {
-            _loading.value = true
-            _error.value = null
-            try {
-                val u = loginUseCase(email, password)
-                _user.value = u
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Credenciales inválidas"
-            } finally {
-                _loading.value = false
-            }
+
         }
     }
 
