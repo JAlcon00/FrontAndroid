@@ -1,11 +1,21 @@
 // app/src/main/java/com/example/frontstore/MainActivity.kt
 package com.example.frontstore
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -29,6 +39,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var getArticulosUseCase: GetArticulosUseCase
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,18 +62,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             FrontStoreTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
-                    composable<Screens.LoginScreenRoute> {
-                        LoginScreen(navController = navController)
+                Scaffold (
+                    bottomBar = {
+                        // Barra de navegacion
                     }
-                    composable<Screens.RegisterScreenRoute> {
-                        RegistroScreen(navController = navController)
-                    }
-                    composable<Screens.ListaArticulosScreenRoute> {
-                        ListaArticulosScreenPreviewable(navController = navController)
+                ) {
+                    NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
+                        composable<Screens.LoginScreenRoute> {
+                            LoginScreen(navController = navController)
+                        }
+                        composable<Screens.RegisterScreenRoute> {
+                            RegistroScreen(navController = navController)
+                        }
+                        composable<Screens.ListaArticulosScreenRoute> {
+                            ListaArticulosScreenPreviewable(navController = navController)
+                        }
                     }
                 }
             }
         }
     }
 }
+
