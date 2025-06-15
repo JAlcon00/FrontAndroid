@@ -168,6 +168,20 @@ fun LoginScreen(
                     }
                 )
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    text = "Continuar como invitado",
+                    color = PricePurple, // Morado claro
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screens.ListaArticulosScreenRoute)
+                    }
+                )
+            }
         }
     }
 }
