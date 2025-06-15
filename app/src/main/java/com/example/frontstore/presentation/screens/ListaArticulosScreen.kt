@@ -135,9 +135,6 @@ fun ListaArticulosScreenPreviewable(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-
-
-
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -183,7 +180,7 @@ fun ListaArticulosScreenPreviewable(
         )
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(listOf("Ropa", "Zapatos", "Accesorios")) { categoria ->
+            items(categorias) { categoria ->
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
@@ -191,7 +188,10 @@ fun ListaArticulosScreenPreviewable(
                         .background(Color(0xFFE0E0E0))
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Text(text = categoria)
+                    Text(
+                        text = categoria.nombre,
+                        color = Color.Black
+                    )
                 }
             }
         }
