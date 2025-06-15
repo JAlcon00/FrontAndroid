@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -27,6 +28,7 @@ fun RegistroScreen(
     navController: NavController
 ) {
     var nombre by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     //val uiState by viewModel.uiState.collectAsState()
@@ -62,6 +64,27 @@ fun RegistroScreen(
                 leadingIcon = {
                     Icon(
                         Icons.Default.Person,
+                        contentDescription = null,
+                        tint = Violet
+                    )
+                },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Violet,
+                    unfocusedBorderColor = DeepPurple,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Violet
+                )
+            )
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo", color = Violet) },
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Email,
                         contentDescription = null,
                         tint = Violet
                     )
