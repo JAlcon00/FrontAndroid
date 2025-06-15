@@ -1,6 +1,7 @@
 package com.example.frontstore.data.remote.api
 
 import com.example.frontstore.data.model.ArticuloDto
+import com.example.frontstore.domain.model.Articulo
 import retrofit2.http.GET
 import retrofit2.http.Path
 

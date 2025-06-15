@@ -1,5 +1,7 @@
 package com.example.frontstore.data.repository
 
+import android.util.Log
+import com.example.frontstore.data.model.ArticuloDto
 import com.example.frontstore.data.remote.api.ArticuloApi
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.domain.repository.ArticuloRepository
@@ -8,18 +10,20 @@ import javax.inject.Inject
 class ArticuloRepositoryImpl @Inject constructor(
     private val api: ArticuloApi
 ) : ArticuloRepository {
-    override suspend fun getArticulos(): List<Articulo> {
+
+    override suspend fun getArticulos(): List<ArticuloDto> {
         val dtos = api.getArticulos()
         return dtos.map { dto ->
-            Articulo(
-                id = dto._id,
+            ArticuloDto(
+                _id = dto._id,
                 nombre = dto.nombre,
                 descripcion = dto.descripcion,
                 precio = dto.precio,
                 stock = dto.stock,
-                categoriaId = dto.categoria,
-                imagenUrl = dto.imagenUrl,
-                activo = dto.activo
+                categoria = dto.categoria,
+                activo = dto.activo,
+                imagenes = dto.imagenes,
+                fechaCreacion = dto.fechaCreacion
             )
         }
     }
@@ -27,14 +31,15 @@ class ArticuloRepositoryImpl @Inject constructor(
     override suspend fun getArticuloById(id: String): Articulo {
         val dto = api.getArticuloById(id)
         return Articulo(
-            id = dto._id,
+            _id = dto._id,
             nombre = dto.nombre,
             descripcion = dto.descripcion,
             precio = dto.precio,
             stock = dto.stock,
-            categoriaId = dto.categoria,
-            imagenUrl = dto.imagenUrl,
-            activo = dto.activo
+            categoria = dto.categoria,
+            activo = dto.activo,
+            imagenes = dto.imagenes,
+            fechaCreacion = dto.fechaCreacion
         )
     }
 
@@ -42,14 +47,15 @@ class ArticuloRepositoryImpl @Inject constructor(
         val dtos = api.getArticulosPorCategoria(categoriaId)
         return dtos.map { dto ->
             Articulo(
-                id = dto._id,
+                _id = dto._id,
                 nombre = dto.nombre,
                 descripcion = dto.descripcion,
                 precio = dto.precio,
                 stock = dto.stock,
-                categoriaId = dto.categoria,
-                imagenUrl = dto.imagenUrl,
-                activo = dto.activo
+                categoria = dto.categoria,
+                activo = dto.activo,
+                imagenes = dto.imagenes,
+                fechaCreacion = dto.fechaCreacion
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,17 +28,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-
-// --- Modelo y estado ---
-data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
-
-data class ArticuloUiState(
-    val loading: Boolean = false,
-    val error: String? = null,
-    val articulos: List<Articulo> = emptyList()
-)
-
+import com.example.frontstore.domain.model.Articulo
+import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
 
 // --- Componente de tarjeta ---
 @Composable
@@ -87,6 +81,17 @@ fun ListaArticulosScreenPreviewable(
     navController: NavController
 ) {
     var searchQuery by remember { mutableStateOf("") }
+
+    val viewModel : ArticuloViewModel = hiltViewModel()
+
+    val articulos by viewModel.articulos.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.loadArticulos()
+    }
+
 
     Column(
         modifier = Modifier
@@ -190,7 +195,7 @@ fun ListaArticulosScreenPreviewable(
 //        val articulosFiltrados = uiState.articulos.filter {
 //            searchQuery.isBlank() || it.titulo.contains(searchQuery, ignoreCase = true)
 //        }
-
+//
 //        LazyVerticalGrid(
 //            columns = GridCells.Fixed(2),
 //            modifier = Modifier.fillMaxSize(),
@@ -215,13 +220,6 @@ fun ListaArticulosScreenPreviewable(
 @Preview(showBackground = true)
 @Composable
 fun ListaArticulosScreenPreview() {
-    val mockArticulos = listOf(
-        Articulo("1", "Camisa Blanca", "https://via.placeholder.com/150", 25.99),
-        Articulo("2", "Pantalón Negro", "https://via.placeholder.com/150", 45.50),
-        Articulo("3", "Zapatos de Cuero", "https://via.placeholder.com/150", 89.00),
-        Articulo("4", "Camisa Blanca", "https://via.placeholder.com/150", 25.99)
-    )
-    val mockUiState = ArticuloUiState(articulos = mockArticulos)
 
 //    ListaArticulosScreenPreviewable(uiState = mockUiState)
 }

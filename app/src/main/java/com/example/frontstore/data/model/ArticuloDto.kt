@@ -7,7 +7,7 @@ data class ArticuloDto(
     val precio: Double,
     val stock: Int,
     val categoria: String,
-    val imagenUrl: String?,
-    val fechaCreacion: String,
-    val activo: Boolean
+    val activo: Boolean,
+    val imagenes: List<String>,
+    val fechaCreacion: String
 )

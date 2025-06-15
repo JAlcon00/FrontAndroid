@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontstore.domain.model.Articulo
@@ -29,13 +30,28 @@ class ArticuloViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
 
     fun loadArticulos() {
+        var articulosList: List<Articulo> = emptyList()
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
             try {
-                val list = getArticulosUseCase()
-                _articulos.value = list
+                val articulosList = getArticulosUseCase().map { articuloDto ->
+                    Articulo(
+                        _id = articuloDto._id,
+                        nombre = articuloDto.nombre,
+                        descripcion = articuloDto.descripcion,
+                        precio = articuloDto.precio,
+                        stock = articuloDto.stock,
+                        categoria = articuloDto.categoria,
+                        activo = articuloDto.activo,
+                        imagenes = articuloDto.imagenes,
+                        fechaCreacion = articuloDto.fechaCreacion
+                    )
+                }
+                _articulos.value = articulosList
+                Log.d("ArticuloViewModel", "Artículos actualizados en _articulos: ${_articulos.value}")
             } catch (e: Exception) {
+                Log.e("ArticuloViewModel", "Error al cargar artículos: ${e.message}", e)
                 _error.value = e.message ?: "Error al cargar productos"
             } finally {
                 _loading.value = false
