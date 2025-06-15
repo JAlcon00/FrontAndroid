@@ -2,12 +2,15 @@ package com.example.frontstore.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.frontstore.data.model.registerAuth
 import com.example.frontstore.domain.model.Usuario
 import com.example.frontstore.domain.upercase.LoginUsuarioUseCase
 import com.example.frontstore.domain.upercase.RegisterUsuarioUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +20,9 @@ class AuthViewModel @Inject constructor(
     private val loginUseCase: LoginUsuarioUseCase,
     private val registerUseCase: RegisterUsuarioUseCase
 ) : ViewModel() {
+    private val _registerEvent = MutableSharedFlow<String>()
+    val registerEvent = _registerEvent.asSharedFlow()
+
     private val _user = MutableStateFlow<Usuario?>(null)
     val user: StateFlow<Usuario?> = _user.asStateFlow()
 
@@ -41,25 +47,23 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun register(nombre: String, email: String, password: String, direccion: String, telefono: String) {
+    fun register(nombre: String, apellido: String, email: String, password: String, direccion: String, telefono: String) {
+        val auth = registerAuth(
+            nombre = nombre,
+            apellido = apellido,
+            email = email,
+            password = password,
+            direccion = direccion,
+            telefono = telefono
+        )
         viewModelScope.launch {
-            _loading.value = true
-            _error.value = null
-            try {
-                val nuevo = Usuario(
-                    id = "", // la API lo asigna
-                    nombre = nombre,
-                    email = email,
-                    direccion = direccion,
-                    telefono = telefono,
-                    rol = "cliente"
-                )
-                val u = registerUseCase(nuevo)
-                _user.value = u
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error al registrar"
-            } finally {
-                _loading.value = false
+            val response = registerUseCase(registerAuth = auth)
+            if (response.message == "Cliente registrado exitosamente") {
+                // Se registro correctamente
+                _registerEvent.emit("Success")
+            } else {
+                // Hubo un error
+                _registerEvent.emit(response.message)
             }
         }
     }

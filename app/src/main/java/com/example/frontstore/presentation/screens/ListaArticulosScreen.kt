@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 // --- Modelo y estado ---
 data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
@@ -82,7 +83,9 @@ fun CardArticulo(
 // --- Pantalla principal previewable ---
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaArticulosScreenPreviewable(uiState: ArticuloUiState) {
+fun ListaArticulosScreenPreviewable(
+    navController: NavController
+) {
     var searchQuery by remember { mutableStateOf("") }
 
     Column(
@@ -184,26 +187,26 @@ fun ListaArticulosScreenPreviewable(uiState: ArticuloUiState) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        val articulosFiltrados = uiState.articulos.filter {
-            searchQuery.isBlank() || it.titulo.contains(searchQuery, ignoreCase = true)
-        }
+//        val articulosFiltrados = uiState.articulos.filter {
+//            searchQuery.isBlank() || it.titulo.contains(searchQuery, ignoreCase = true)
+//        }
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(articulosFiltrados) { articulo ->
-                CardArticulo(
-                    titulo = articulo.titulo,
-                    imagenUrl = articulo.imagenUrl,
-                    precio = articulo.precio,
-                    onClick = {}
-                )
-            }
-        }
+//        LazyVerticalGrid(
+//            columns = GridCells.Fixed(2),
+//            modifier = Modifier.fillMaxSize(),
+//            contentPadding = PaddingValues(8.dp),
+//            verticalArrangement = Arrangement.spacedBy(12.dp),
+//            horizontalArrangement = Arrangement.spacedBy(12.dp)
+//        ) {
+//            items(articulosFiltrados) { articulo ->
+//                CardArticulo(
+//                    titulo = articulo.titulo,
+//                    imagenUrl = articulo.imagenUrl,
+//                    precio = articulo.precio,
+//                    onClick = {}
+//                )
+//            }
+//        }
     }
 }
 
@@ -220,7 +223,7 @@ fun ListaArticulosScreenPreview() {
     )
     val mockUiState = ArticuloUiState(articulos = mockArticulos)
 
-    ListaArticulosScreenPreviewable(uiState = mockUiState)
+//    ListaArticulosScreenPreviewable(uiState = mockUiState)
 }
 
 

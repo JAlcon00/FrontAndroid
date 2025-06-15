@@ -8,4 +8,7 @@ sealed class Screens() {
 
     @Serializable
     object RegisterScreenRoute : Screens()
+
+    @Serializable
+    object ListaArticulosScreenRoute : Screens()
 }

@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
+import com.example.frontstore.presentation.screens.ListaArticulosScreenPreviewable
 import com.example.frontstore.presentation.screens.auth.LoginScreen
 import com.example.frontstore.presentation.screens.auth.RegistroScreen
 import com.example.frontstore.ui.theme.FrontStoreTheme
@@ -56,6 +57,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable<Screens.RegisterScreenRoute> {
                         RegistroScreen(navController = navController)
+                    }
+                    composable<Screens.ListaArticulosScreenRoute> {
+                        ListaArticulosScreenPreviewable(navController = navController)
                     }
                 }
             }

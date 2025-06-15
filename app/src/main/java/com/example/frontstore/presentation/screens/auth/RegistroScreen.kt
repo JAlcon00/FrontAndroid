@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.screens.auth
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.viewmodel.AuthViewModel
 import com.example.frontstore.ui.theme.Black
 import com.example.frontstore.ui.theme.DeepPurple
@@ -31,8 +33,39 @@ fun RegistroScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    //val uiState by viewModel.uiState.collectAsState()
+    val viewModel : AuthViewModel = hiltViewModel()
+
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
     val contrasenasIguales = password == confirmPassword && password.isNotEmpty()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.registerEvent.collect { result ->
+            Log.i("RegisterScreen", "Recibiendo evento de registro: $result")
+            if (result != "Success") {
+                // Ocurrio un error
+                showErrorDialog = true
+                errorMessage = result
+            } else {
+                // Esta bien, navegar al login
+                navController.navigate(Screens.ListaArticulosScreenRoute)
+            }
+        }
+    }
+
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            confirmButton = {
+                TextButton( onClick = { showErrorDialog = false }) {
+                    Text(text = "Aceptar")
+                }
+            },
+            title = { Text(text = "Error" )},
+            text = { Text(text = errorMessage )}
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -150,31 +183,26 @@ fun RegistroScreen(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-//            if (uiState.error != null) {
-//                Text(
-//                    text = uiState.error,
-//                    color = MaterialTheme.colorScheme.error,
-//                    style = MaterialTheme.typography.bodySmall
-//                )
-//            }
-//            if (uiState.isLoading) {
-//                CircularProgressIndicator(color = PricePurple)
-//            } else {
-//                Button(
-//                    onClick = { viewModel.register(nombre, password) },
-//                    enabled = contrasenasIguales && nombre.isNotEmpty(),
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(50.dp),
-//                    shape = RoundedCornerShape(12.dp),
-//                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple)
-//                ) {
-//                    Text("Registrarse", color = Color.White)
-//                }
-//            }
-//            TextButton(onClick = { navController.popBackStack() }) {
-//                Text("¿Ya tienes cuenta? Inicia sesión", color = PricePurple)
-//            }
+
+            Button(
+                onClick = { viewModel.register(
+                    nombre = nombre,
+                    apellido = " ",
+                    email = email,
+                    password = password,
+                    direccion = " ",
+                    telefono = " "
+                ) },
+                enabled = contrasenasIguales && nombre.isNotEmpty(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = DeepPurple)
+            ) {
+                Text("Registrarse", color = Color.White)
+            }
+
         }
     }
 //    LaunchedEffect(uiState.isSuccess) {
