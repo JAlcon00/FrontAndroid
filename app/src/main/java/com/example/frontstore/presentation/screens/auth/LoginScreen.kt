@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.screens.auth
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -31,7 +32,36 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val viewModel : AuthViewModel = hiltViewModel()
-    //val uiState by viewModel.uiState.collectAsState()
+
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.loginEvent.collect { result ->
+            Log.i("LoginScreen", "Recibiendo evento de login: $result")
+            if (result != "Success") {
+                // Ocurrio un error
+                showErrorDialog = true
+                errorMessage = result
+            } else {
+                // Esta correcto, navegar a la pantalla principal
+                navController.navigate(Screens.ListaArticulosScreenRoute)
+            }
+        }
+    }
+
+    if (showErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showErrorDialog = false },
+            confirmButton = {
+                TextButton( onClick = { showErrorDialog = false }) {
+                    Text(text = "Aceptar")
+                }
+            },
+            title = { Text(text = "Error" )},
+            text = { Text(text = errorMessage )}
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -110,6 +140,21 @@ fun LoginScreen(
                     cursorColor = Violet
                 )
             )
+            Button(
+                    onClick = {
+                        viewModel.login(
+                            email = email,
+                            password = password
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple) // Morado oscuro llamativo
+                ) {
+                    Text("Iniciar sesión", color = Color.White)
+                }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
@@ -123,37 +168,6 @@ fun LoginScreen(
                     }
                 )
             }
-//            if (uiState.error != null) {
-//                Text(
-//                    text = uiState.error,
-//                    color = MaterialTheme.colorScheme.error,
-//                    style = MaterialTheme.typography.bodySmall
-//                )
-//            }
-//            if (uiState.isLoading) {
-//                CircularProgressIndicator(color = PricePurple)
-//            } else {
-//                Button(
-//                    onClick = { viewModel.login(email, password) },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(50.dp),
-//                    shape = RoundedCornerShape(12.dp),
-//                    colors = ButtonDefaults.buttonColors(containerColor = DeepPurple) // Morado oscuro llamativo
-//                ) {
-//                    Text("Iniciar sesión", color = Color.White)
-//                }
-//            }
-//            TextButton(onClick = { /* Acción de registro */ }) {
-//                Text("¿No tienes cuenta? Regístrate", color = PricePurple) // Morado claro
-//            }
         }
     }
-//    LaunchedEffect(uiState.isSuccess) {
-//        if (uiState.isSuccess) {
-//            navController.navigate("listaArticulos") {
-//                popUpTo("login") { inclusive = true }
-//            }
-//        }
-//    }
 }
