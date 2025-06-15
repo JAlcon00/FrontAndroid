@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
 
@@ -92,6 +93,7 @@ fun ListaArticulosScreenPreviewable(
         viewModel.loadArticulos()
     }
 
+    val articuloRandom = if (articulos.isNotEmpty()) articulos.random() else null
 
     Column(
         modifier = Modifier
@@ -148,12 +150,6 @@ fun ListaArticulosScreenPreviewable(
             )
         )
 
-
-
-
-
-
-
         Spacer(modifier = Modifier.height(12.dp))
 
         Box(
@@ -161,10 +157,14 @@ fun ListaArticulosScreenPreviewable(
                 .fillMaxWidth()
                 .height(180.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFE5DEEA)),
+                .background(Color.White),
             contentAlignment = Alignment.Center
         ) {
-            Text("Imagen destacada", color = Color.DarkGray)
+            AsyncImage(
+                model = articuloRandom?.imagenes[0],
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
