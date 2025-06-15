@@ -3,6 +3,7 @@ package com.example.frontstore.presentation.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -92,6 +93,11 @@ fun ListaArticulosScreenPreviewable(
 
     val loading by viewModel.loading.collectAsState()
     val error by viewModel.error.collectAsState()
+
+    var categoriaSeleccionada by remember { mutableStateOf<String?>(null) }
+    val articulosFiltrados = articulos.filter { articulo ->
+        categoriaSeleccionada == null || articulo.categoria == categoriaSeleccionada
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.loadArticulos()
@@ -184,13 +190,14 @@ fun ListaArticulosScreenPreviewable(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(16.dp))
+                        .background(Color(0xFFE0E0E0)) // Fondo gris
                         .height(35.dp)
-                        .background(Color(0xFFE0E0E0))
                         .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clickable { categoriaSeleccionada = categoria.id }
                 ) {
                     Text(
                         text = categoria.nombre,
-                        color = Color.Black
+                        color = Color.Black // Asegura contraste
                     )
                 }
             }
@@ -198,26 +205,22 @@ fun ListaArticulosScreenPreviewable(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-//        val articulosFiltrados = uiState.articulos.filter {
-//            searchQuery.isBlank() || it.titulo.contains(searchQuery, ignoreCase = true)
-//        }
-//
-//        LazyVerticalGrid(
-//            columns = GridCells.Fixed(2),
-//            modifier = Modifier.fillMaxSize(),
-//            contentPadding = PaddingValues(8.dp),
-//            verticalArrangement = Arrangement.spacedBy(12.dp),
-//            horizontalArrangement = Arrangement.spacedBy(12.dp)
-//        ) {
-//            items(articulosFiltrados) { articulo ->
-//                CardArticulo(
-//                    titulo = articulo.titulo,
-//                    imagenUrl = articulo.imagenUrl,
-//                    precio = articulo.precio,
-//                    onClick = {}
-//                )
-//            }
-//        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(articulosFiltrados) { articulo ->
+                CardArticulo(
+                    titulo = articulo.nombre,
+                    imagenUrl = articulo.imagenes[0],
+                    precio = articulo.precio,
+                    onClick = {}
+                )
+            }
+        }
     }
 }
 
