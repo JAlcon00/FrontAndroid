@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -29,6 +30,7 @@ import com.example.bitcoinapp.presentation.screens.detalle.DetalleArticuloScreen
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
+import com.example.frontstore.presentation.screens.FavoritosScreen
 import com.example.frontstore.presentation.screens.ListaArticulosScreenPreviewable
 import com.example.frontstore.presentation.screens.auth.LoginScreen
 import com.example.frontstore.presentation.screens.auth.RegistroScreen
@@ -79,8 +81,14 @@ class MainActivity : ComponentActivity() {
                             currentRoute != Screens.RegisterScreenRoute) {
                             NavigationBar {
                                 NavigationBarItem(
-                                    selected = true,
-                                    onClick = { /* Acción de navegación */ },
+                                    selected = currentRoute == Screens.FavoritosScreenRoute,
+                                    onClick = { navController.navigate(Screens.FavoritosScreenRoute )},
+                                    icon = { Icon(Icons.Default.Star, contentDescription = "Favoritos")},
+                                    label = { Text("Favoritos") }
+                                )
+                                NavigationBarItem(
+                                    selected = currentRoute == Screens.ListaArticulosScreenRoute,
+                                    onClick = { navController.navigate(Screens.ListaArticulosScreenRoute )},
                                     icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
                                     label = { Text("Inicio") }
                                 )
@@ -101,6 +109,10 @@ class MainActivity : ComponentActivity() {
                         composable(Screens.ListaArticulosScreenRoute) {
                             ListaArticulosScreenPreviewable(navController = navController)
                             currentRoute = Screens.ListaArticulosScreenRoute
+                        }
+                        composable(Screens.FavoritosScreenRoute) {
+                            FavoritosScreen(navController = navController)
+                            currentRoute = Screens.FavoritosScreenRoute
                         }
                         composable(
                             route = "articulo/{id}",
