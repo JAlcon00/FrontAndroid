@@ -21,17 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 
-// --- Modelo y estado ---
-data class Articulo(val id: String, val titulo: String, val imagenUrl: String, val precio: Double)
-
-data class ArticuloUiState(
-    val loading: Boolean = false,
-    val error: String? = null,
-    val articulos: List<Articulo> = emptyList()
-)
-
 @Composable
-fun DetalleArticuloScreen(articulo: Articulo) {
+fun DetalleArticuloScreen(articuloId : String) {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(20.dp)) {
@@ -69,12 +60,12 @@ fun DetalleArticuloScreen(articulo: Articulo) {
                 .height(350.dp)
                 .clip(RoundedCornerShape(16.dp))
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(model = articulo.imagenUrl),
-                contentDescription = "Imagen del artículo",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+//            Image(
+//                painter = rememberAsyncImagePainter(model = articulo.imagenUrl),
+//                contentDescription = "Imagen del artículo",
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier.fillMaxSize()
+//            )
 
             // Icono de corazón en la esquina inferior derecha
             Box(
@@ -94,15 +85,17 @@ fun DetalleArticuloScreen(articulo: Articulo) {
             }
         }
 
+        Text(text = articuloId)
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = articulo.titulo, style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
-        Text(text = "$${articulo.precio}", style = MaterialTheme.typography.titleLarge, color = Color(0xFF6200EE))
-        Text(
-            text = "Esta es una descripción de prueba para el producto seleccionado. Puedes personalizarla.",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
-        )
+//        Text(text = articulo.titulo, style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
+//        Text(text = "$${articulo.precio}", style = MaterialTheme.typography.titleLarge, color = Color(0xFF6200EE))
+//        Text(
+//            text = "Esta es una descripción de prueba para el producto seleccionado. Puedes personalizarla.",
+//            style = MaterialTheme.typography.bodyMedium,
+//            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+//        )
 
         Button(
             onClick = { /* Acción para agregar al carrito */ },
@@ -113,22 +106,6 @@ fun DetalleArticuloScreen(articulo: Articulo) {
         }
     }
 }
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun DetalleArticuloScreenPreview() {
-    val mockArticulo = Articulo(
-        id = "1",
-        titulo = "Camisa Blanca",
-        imagenUrl = "https://via.placeholder.com/300",
-        precio = 25.99
-    )
-    DetalleArticuloScreen(articulo = mockArticulo)
-}
-
-
 
 //@Composable
 //fun DetalleArticuloScreen(

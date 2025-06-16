@@ -1,5 +1,6 @@
 package com.example.frontstore.domain.model
 
+
 data class Articulo(
     val _id: String,
     val nombre: String,

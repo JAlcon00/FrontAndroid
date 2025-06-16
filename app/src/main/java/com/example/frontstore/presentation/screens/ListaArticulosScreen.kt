@@ -217,7 +217,9 @@ fun ListaArticulosScreenPreviewable(
                     titulo = articulo.nombre,
                     imagenUrl = articulo.imagenes[0],
                     precio = articulo.precio,
-                    onClick = {}
+                    onClick = {
+                        navController.navigate("detalle_articulo/${articulo._id}")
+                    }
                 )
             }
         }

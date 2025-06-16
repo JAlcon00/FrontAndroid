@@ -15,9 +15,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.bitcoinapp.presentation.screens.detalle.DetalleArticuloScreen
+import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.screens.ListaArticulosScreenPreviewable
@@ -84,6 +88,16 @@ class MainActivity : ComponentActivity() {
                         ) { paddingValues ->
                             ListaArticulosScreenPreviewable(navController = navController)
                         }
+                    }
+                    composable(
+                        route = "detalle_articulo/{id}",
+                        arguments = listOf(navArgument("id") {
+                            type = NavType.StringType
+                            nullable = false
+                        })
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getString("id")
+                        DetalleArticuloScreen(articuloId = id.toString())
                     }
                 }
             }
