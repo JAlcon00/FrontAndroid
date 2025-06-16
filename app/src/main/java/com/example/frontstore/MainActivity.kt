@@ -144,7 +144,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val context = LocalContext.current
                             val userPreferences = remember { UserPreferences.getInstance(context) }
-                            val usuarioIdState = userPreferences.userId.collectAsState(initial = null)
+                            val usuarioIdState = userPreferences.userId.collectAsState(initial = "")
                             val usuarioId = usuarioIdState.value
                             currentRoute = "clientes/id"
 

@@ -2,6 +2,7 @@ package com.example.frontstore.data.remote.network
 
 import com.example.frontstore.data.remote.api.ArticuloApi
 import com.example.frontstore.data.remote.api.CategoriaApi
+import com.example.frontstore.data.remote.api.ClienteApi
 import com.example.frontstore.data.remote.api.PedidoApi
 import com.example.frontstore.data.remote.api.UsuarioApi
 import dagger.Module
@@ -34,4 +35,8 @@ object NetworkModule {
     @Provides @Singleton
     fun providePedidoApi(retrofit: Retrofit): PedidoApi =
         retrofit.create(PedidoApi::class.java)
+
+    @Provides @Singleton
+    fun provideClienteApi(retrofit: Retrofit): ClienteApi =
+        retrofit.create(ClienteApi::class.java)
 }

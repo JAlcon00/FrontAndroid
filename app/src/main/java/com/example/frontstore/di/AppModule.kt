@@ -1,16 +1,20 @@
 package com.example.frontstore.di
 
 
+import com.example.frontstore.data.model.Cliente
 import com.example.frontstore.data.remote.api.ArticuloApi
 import com.example.frontstore.data.remote.api.CategoriaApi
+import com.example.frontstore.data.remote.api.ClienteApi
 import com.example.frontstore.data.remote.api.PedidoApi
 import com.example.frontstore.data.remote.api.UsuarioApi
 import com.example.frontstore.data.repository.ArticuloRepositoryImpl
 import com.example.frontstore.data.repository.CategoriaRepositoryImpl
+import com.example.frontstore.data.repository.ClienteRepositoryImpl
 import com.example.frontstore.data.repository.PedidoRepositoryImpl
 import com.example.frontstore.data.repository.UsuarioRepositoryImpl
 import com.example.frontstore.domain.repository.ArticuloRepository
 import com.example.frontstore.domain.repository.CategoriaRepository
+import com.example.frontstore.domain.repository.ClienteRepository
 import com.example.frontstore.domain.repository.PedidoRepository
 import com.example.frontstore.domain.repository.UsuarioRepository
 import com.example.frontstore.domain.upercase.CreatePedidoUseCase
@@ -18,6 +22,7 @@ import com.example.frontstore.domain.upercase.GetArticuloByIdUseCase
 import com.example.frontstore.domain.upercase.GetArticulosPorCategoriaUseCase
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.domain.upercase.GetCategoriasUseCase
+import com.example.frontstore.domain.upercase.GetClienteByIdUseCase
 import com.example.frontstore.domain.upercase.GetPedidosPorUsuarioUseCase
 import com.example.frontstore.domain.upercase.LoginUsuarioUseCase
 import com.example.frontstore.domain.upercase.RegisterUsuarioUseCase
@@ -49,6 +54,10 @@ object AppModule {
     @Provides @Singleton
     fun providePedidoRepository(api: PedidoApi): PedidoRepository =
         PedidoRepositoryImpl(api)
+
+    @Provides @Singleton
+    fun provideClienteRepository(api: ClienteApi): ClienteRepository =
+        ClienteRepositoryImpl(api)
 
     // Use cases:
     @Provides @Singleton
@@ -82,4 +91,8 @@ object AppModule {
     @Provides @Singleton
     fun provideGetPedidosPorUsuarioUseCase(repo: PedidoRepository): GetPedidosPorUsuarioUseCase =
         GetPedidosPorUsuarioUseCase(repo)
+
+    @Provides @Singleton
+    fun provideGetClienteByIdUseCase(repo : ClienteRepository) : GetClienteByIdUseCase =
+        GetClienteByIdUseCase(repo)
 }

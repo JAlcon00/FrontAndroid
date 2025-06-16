@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +30,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.frontstore.presentation.viewmodel.ClienteViewModel
 
 @Composable
 fun PerfilOpcionCard(titulo: String, subtitulo: String) {
@@ -65,6 +70,21 @@ fun PerfilUsuarioScreen(
     navController: NavController,
     usuarioId : String
 ) {
+    val clienteViewModel : ClienteViewModel = hiltViewModel()
+
+    val cliente = clienteViewModel.cliente.collectAsState().value
+    Log.e("PerfilUsuarioScreen", "UsuarioId : $usuarioId")
+
+    LaunchedEffect(key1 = usuarioId) {
+        if (usuarioId.isNotEmpty()) {
+            clienteViewModel.loadClienteById(id = usuarioId)
+        } else {
+            Log.e("PerfilUsuarioScreen", "usuarioId está vacío o es inválido")
+        }
+    }
+
+    Log.e("PerfilUsuarioScreen", "Cliente: $cliente")
+
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)) {
@@ -104,12 +124,10 @@ fun PerfilUsuarioScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Victor Hassiel Avila Monjaraz", fontSize = 18.sp)
-                Text(text = "HassielExample@gmail.com", color = Color.Gray)
+                Text(text = if (cliente != null) cliente.nombre + " " + cliente.apellido else "Usuario Invitado", fontSize = 18.sp)
+                Text(text = if (cliente != null) cliente.email else "example@example.com ", color = Color.Gray)
             }
         }
-
-        Text(text = usuarioId)
 
         // Opciones
         PerfilOpcionCard(
