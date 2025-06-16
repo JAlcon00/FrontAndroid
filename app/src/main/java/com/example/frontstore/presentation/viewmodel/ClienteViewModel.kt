@@ -26,6 +26,8 @@ class ClienteViewModel @Inject constructor(
     val error : StateFlow<String?> = _error.asStateFlow()
 
     fun loadClienteById(id: String) {
+        _loading.value = true
+        _error.value = null
         viewModelScope.launch {
             if (id.isEmpty()) {
                 Log.e("ClienteViewModel", "El ID proporcionado está vacío")
@@ -54,8 +56,6 @@ class ClienteViewModel @Inject constructor(
                     _loading.value = false
                 }
             }
-
-
         }
     }
 }

@@ -30,6 +30,9 @@ import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
 fun DetalleArticuloScreen(articuloId : String) {
     val articuloViewModel : ArticuloViewModel = hiltViewModel()
 
+    val loading = articuloViewModel.loading.collectAsState()
+    val error = articuloViewModel.error.collectAsState()
+
     val articulo = articuloViewModel.articulo.collectAsState().value
 
     LaunchedEffect(key1 = true) {
@@ -68,55 +71,80 @@ fun DetalleArticuloScreen(articuloId : String) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Imagen del producto en un contenedor
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(350.dp)
-                .clip(RoundedCornerShape(16.dp))
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter(model = articulo?.imagenes[0]),
-                contentDescription = "Imagen del artículo",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
+        when {
+            loading.value -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            error.value != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = error.value ?: "Error desconocido",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+            else -> {
+                // Imagen del producto en un contenedor
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(350.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = articulo?.imagenes[0]),
+                        contentDescription = "Imagen del artículo",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
 
-            // Icono de corazón en la esquina inferior derecha
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp)
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(Color.White),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = "Favorito",
-                    tint = Color.Red
+                    // Icono de corazón en la esquina inferior derecha
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color.White),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Favorito",
+                            tint = Color.Red
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(text = articulo?.nombre.toString(), style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
+                Text(text = "$${articulo?.precio}", style = MaterialTheme.typography.titleLarge, color = Color(0xFF6200EE))
+                Text(
+                    text = "${articulo?.descripcion}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
                 )
+
+                Button(
+                    onClick = { /* Acción para agregar al carrito */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Add to Cart", color = Color.White)
+                }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = articulo?.nombre.toString(), style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
-        Text(text = "$${articulo?.precio}", style = MaterialTheme.typography.titleLarge, color = Color(0xFF6200EE))
-        Text(
-            text = "${articulo?.descripcion}",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
-        )
-
-        Button(
-            onClick = { /* Acción para agregar al carrito */ },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE)),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Add to Cart", color = Color.White)
-        }
     }
 }
 

@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.presentation.viewmodel.ArticuloViewModel
 import com.example.frontstore.presentation.viewmodel.CategoriaViewModel
+import com.example.frontstore.ui.theme.PricePurple
 
 // --- Componente de tarjeta ---
 @Composable
@@ -162,68 +163,88 @@ fun ListaArticulosScreenPreviewable(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            AsyncImage(
-                model = articuloRandom?.imagenes[0],
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = "Categorías",
-            fontSize = 20.sp,
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(start = 2.dp, bottom = 8.dp)
-        )
-
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(categorias) { categoria ->
+        when {
+            loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+            error != null -> {
+                Text(
+                    text = error ?: "Error desconocido",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+            else -> {
                 Box(
                     modifier = Modifier
+                        .fillMaxWidth()
+                        .height(180.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color(0xFFE0E0E0)) // Fondo gris
-                        .height(35.dp)
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .clickable { categoriaSeleccionada = categoria.id }
+                        .background(Color.White),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = categoria.nombre,
-                        color = Color.Black // Asegura contraste
+                    AsyncImage(
+                        model = articuloRandom?.imagenes[0],
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
                     )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Categorías",
+                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(start = 2.dp, bottom = 8.dp)
+                )
+
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    items(categorias) { categoria ->
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Color(0xFFE0E0E0)) // Fondo gris
+                                .height(35.dp)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .clickable { categoriaSeleccionada = categoria.id }
+                        ) {
+                            Text(
+                                text = categoria.nombre,
+                                color = Color.Black // Asegura contraste
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(articulosFiltrados) { articulo ->
+                        CardArticulo(
+                            titulo = articulo.nombre,
+                            imagenUrl = articulo.imagenes[0],
+                            precio = articulo.precio,
+                            onClick = {
+                                navController.navigate("articulo/${articulo._id}")
+                            }
+                        )
+                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(articulosFiltrados) { articulo ->
-                CardArticulo(
-                    titulo = articulo.nombre,
-                    imagenUrl = articulo.imagenes[0],
-                    precio = articulo.precio,
-                    onClick = {
-                        navController.navigate("articulo/${articulo._id}")
-                    }
-                )
-            }
-        }
     }
 }
 

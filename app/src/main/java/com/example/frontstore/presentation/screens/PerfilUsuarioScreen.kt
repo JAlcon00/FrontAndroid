@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -83,6 +84,9 @@ fun PerfilUsuarioScreen(
     val userPreferences = UserPreferences.getInstance(context)
     val coroutineScope = rememberCoroutineScope()
 
+    val loading = clienteViewModel.loading.collectAsState().value
+    val error = clienteViewModel.error.collectAsState().value
+
     Log.e("PerfilUsuarioScreen", "UsuarioId : $usuarioId")
 
     LaunchedEffect(key1 = usuarioId) {
@@ -111,79 +115,100 @@ fun PerfilUsuarioScreen(
             Text(text = "Mi cuenta", style = MaterialTheme.typography.titleLarge)
         }
 
-        // Información del usuario
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        when {
+            loading -> {
                 Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF6200EE)),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Usuario",
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp)
-                    )
+                    CircularProgressIndicator()
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = if (cliente != null) cliente.nombre + " " + cliente.apellido else "Usuario Invitado", fontSize = 18.sp)
-                Text(text = if (cliente != null) cliente.email else "example@example.com ", color = Color.Gray)
             }
-        }
-
-        // Opciones
-        PerfilOpcionCard(
-            titulo = "Información personal",
-            subtitulo = "Información de tu identificación oficial y tu actividad fiscal"
-        )
-        PerfilOpcionCard(
-            titulo = "Datos de la cuenta",
-            subtitulo = "Datos que representan a la cuenta en FrontStore",
-        )
-        PerfilOpcionCard(
-            titulo = "Seguridad",
-            subtitulo = "Seguridad de tu cuenta FrontStore"
-        )
-        PerfilOpcionCard(
-            titulo = "Tarjetas",
-            subtitulo = "Tarjetas guardadas en tu cuenta"
-        )
-        PerfilOpcionCard(
-            titulo = "Direcciones",
-            subtitulo = "Direcciones guardadas en tu cuenta"
-        )
-
-        if (cliente == null) {
-            Button(
-                onClick = {
-                    navController.navigate(Screens.LoginScreenRoute)
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = "Iniciar sesión")
+            error != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = error ?: "Error desconocido", color = MaterialTheme.colorScheme.error)
+                }
             }
-        } else {
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        userPreferences.clearUserId()
-                        Log.e("PerfilUsuarioScreen", "UsuarioId borrado de preferencias")
-                        navController.navigate(Screens.LoginScreenRoute)
+            else -> {
+                // Información del usuario
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF6200EE)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Usuario",
+                                tint = Color.White,
+                                modifier = Modifier.size(40.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = if (cliente != null) cliente.nombre + " " + cliente.apellido else "Usuario Invitado", fontSize = 18.sp)
+                        Text(text = if (cliente != null) cliente.email else "example@example.com ", color = Color.Gray)
                     }
-                },
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text(text = "Cerrar sesión")
+                }
+
+                // Opciones
+                PerfilOpcionCard(
+                    titulo = "Información personal",
+                    subtitulo = "Información de tu identificación oficial y tu actividad fiscal"
+                )
+                PerfilOpcionCard(
+                    titulo = "Datos de la cuenta",
+                    subtitulo = "Datos que representan a la cuenta en FrontStore",
+                )
+                PerfilOpcionCard(
+                    titulo = "Seguridad",
+                    subtitulo = "Seguridad de tu cuenta FrontStore"
+                )
+                PerfilOpcionCard(
+                    titulo = "Tarjetas",
+                    subtitulo = "Tarjetas guardadas en tu cuenta"
+                )
+                PerfilOpcionCard(
+                    titulo = "Direcciones",
+                    subtitulo = "Direcciones guardadas en tu cuenta"
+                )
+
+                if (cliente == null) {
+                    Button(
+                        onClick = {
+                            navController.navigate(Screens.LoginScreenRoute)
+                        },
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        Text(text = "Iniciar sesión")
+                    }
+                } else {
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                userPreferences.clearUserId()
+                                Log.e("PerfilUsuarioScreen", "UsuarioId borrado de preferencias")
+                                navController.navigate(Screens.LoginScreenRoute)
+                            }
+                        },
+                        modifier = Modifier.padding(top = 16.dp)
+                    ) {
+                        Text(text = "Cerrar sesión")
+                    }
+                }
             }
         }
+
 
     }
 }
