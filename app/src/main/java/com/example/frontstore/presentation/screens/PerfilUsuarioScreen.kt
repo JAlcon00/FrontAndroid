@@ -1,3 +1,5 @@
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -23,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.frontstore.data.UserPreferences
+import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.viewmodel.ClienteViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun PerfilOpcionCard(titulo: String, subtitulo: String) {
@@ -71,12 +78,15 @@ fun PerfilUsuarioScreen(
     usuarioId : String
 ) {
     val clienteViewModel : ClienteViewModel = hiltViewModel()
-
     val cliente = clienteViewModel.cliente.collectAsState().value
+    val context = navController.context
+    val userPreferences = UserPreferences.getInstance(context)
+    val coroutineScope = rememberCoroutineScope()
+
     Log.e("PerfilUsuarioScreen", "UsuarioId : $usuarioId")
 
     LaunchedEffect(key1 = usuarioId) {
-        if (usuarioId.isNotEmpty()) {
+        if (!usuarioId.isNullOrEmpty()) {
             clienteViewModel.loadClienteById(id = usuarioId)
         } else {
             Log.e("PerfilUsuarioScreen", "usuarioId está vacío o es inválido")
@@ -150,5 +160,30 @@ fun PerfilUsuarioScreen(
             titulo = "Direcciones",
             subtitulo = "Direcciones guardadas en tu cuenta"
         )
+
+        if (cliente == null) {
+            Button(
+                onClick = {
+                    navController.navigate(Screens.LoginScreenRoute)
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(text = "Iniciar sesión")
+            }
+        } else {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        userPreferences.clearUserId()
+                        Log.e("PerfilUsuarioScreen", "UsuarioId borrado de preferencias")
+                        navController.navigate(Screens.LoginScreenRoute)
+                    }
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text(text = "Cerrar sesión")
+            }
+        }
+
     }
 }

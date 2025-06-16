@@ -41,7 +41,7 @@ class UserPreferences private constructor(context: Context) {
 
     suspend fun clearUserId() {
         dataStore.edit { preferences ->
-            preferences.remove(USER_ID_KEY)
+            preferences[USER_ID_KEY] = ""
         }
     }
 }

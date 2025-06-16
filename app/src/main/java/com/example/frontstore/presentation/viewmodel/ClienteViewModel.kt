@@ -27,7 +27,7 @@ class ClienteViewModel @Inject constructor(
 
     fun loadClienteById(id: String) {
         viewModelScope.launch {
-            if (id.isNullOrEmpty()) {
+            if (id.isEmpty()) {
                 Log.e("ClienteViewModel", "El ID proporcionado está vacío")
                 _error.value = "El ID proporcionado está vacío"
             } else {
