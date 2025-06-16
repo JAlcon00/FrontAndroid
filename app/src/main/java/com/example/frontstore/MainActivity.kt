@@ -13,7 +13,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -62,19 +61,27 @@ class MainActivity : ComponentActivity() {
         setContent {
             FrontStoreTheme {
                 val navController = rememberNavController()
-                Scaffold (
-                    bottomBar = {
-                        // Barra de navegacion
+                NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
+                    composable<Screens.LoginScreenRoute> {
+                        LoginScreen(navController = navController)
                     }
-                ) {
-                    NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
-                        composable<Screens.LoginScreenRoute> {
-                            LoginScreen(navController = navController)
-                        }
-                        composable<Screens.RegisterScreenRoute> {
-                            RegistroScreen(navController = navController)
-                        }
-                        composable<Screens.ListaArticulosScreenRoute> {
+                    composable<Screens.RegisterScreenRoute> {
+                        RegistroScreen(navController = navController)
+                    }
+                    composable<Screens.ListaArticulosScreenRoute> {
+                        Scaffold(
+                            bottomBar = {
+                                NavigationBar {
+                                    NavigationBarItem(
+                                        selected = true,
+                                        onClick = { /* Acción de navegación */ },
+                                        icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+                                        label = { Text("Inicio") }
+                                    )
+                                    // Puedes agregar más items aquí
+                                }
+                            }
+                        ) { paddingValues ->
                             ListaArticulosScreenPreviewable(navController = navController)
                         }
                     }
