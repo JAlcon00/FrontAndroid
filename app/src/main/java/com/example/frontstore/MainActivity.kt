@@ -37,6 +37,7 @@ import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.screens.FavoritosScreen
 import com.example.frontstore.presentation.screens.ListaArticulosScreenPreviewable
+import com.example.frontstore.presentation.screens.SplashScreen
 import com.example.frontstore.presentation.screens.auth.LoginScreen
 import com.example.frontstore.presentation.screens.auth.RegistroScreen
 import com.example.frontstore.ui.theme.FrontStoreTheme
@@ -78,7 +79,6 @@ class MainActivity : ComponentActivity() {
             FrontStoreTheme {
                 val navController = rememberNavController()
                 var currentRoute by remember { mutableStateOf<String?>(null) }
-
                 Scaffold(
                     bottomBar = {
                         if (currentRoute != null &&
@@ -107,7 +107,31 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
+                    NavHost(navController = navController, startDestination = Screens.SplashScreenRoute) {
+                        composable(Screens.SplashScreenRoute) {
+                            val context = LocalContext.current
+                            val userPreferences = remember { UserPreferences.getInstance(context) }
+                            val usuarioIdState = userPreferences.userId.collectAsState(initial = null)
+                            val usuarioId = usuarioIdState.value
+
+                            if (usuarioId != null) {
+                                LaunchedEffect(usuarioId) {
+                                    Log.d("SplashScreen", "usuarioId: $usuarioId")
+                                    val nextRoute = if (usuarioId.isNullOrEmpty()) {
+                                        Screens.LoginScreenRoute
+                                    } else {
+                                        Screens.ListaArticulosScreenRoute
+                                    }
+                                    navController.navigate(nextRoute) {
+                                        popUpTo(Screens.SplashScreenRoute) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            } else {
+                                SplashScreen()
+                            }
+                        }
                         composable(Screens.LoginScreenRoute) {
                             LoginScreen(navController = navController)
                             currentRoute = Screens.LoginScreenRoute
