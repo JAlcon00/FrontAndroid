@@ -1,6 +1,7 @@
 // app/src/main/java/com/example/frontstore/MainActivity.kt
 package com.example.frontstore
 
+import PerfilUsuarioScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -92,7 +94,12 @@ class MainActivity : ComponentActivity() {
                                     icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
                                     label = { Text("Inicio") }
                                 )
-                                // Agrega más items si es necesario
+                                NavigationBarItem(
+                                    selected = currentRoute == "clientes/id",
+                                    onClick = { navController.navigate("clientes/id") },
+                                    icon = { Icon(Icons.Default.Person, contentDescription = "Perfil")},
+                                    label = { Text("Perfil") }
+                                )
                             }
                         }
                     }
@@ -125,44 +132,18 @@ class MainActivity : ComponentActivity() {
                             currentRoute = "detalle_articulo/$id"
                             DetalleArticuloScreen(articuloId = id.toString())
                         }
+                        composable(
+                            route = "clientes/{id}",
+                            arguments = listOf(navArgument("id") {
+                                type = NavType.StringType
+                                nullable = false
+                            })
+                        ) {
+                            currentRoute = "clientes/id"
+                            PerfilUsuarioScreen(navController = navController, usuarioId = "")
+                        }
                     }
                 }
-
-//                NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
-//                    composable<Screens.LoginScreenRoute> {
-//                        LoginScreen(navController = navController)
-//                    }
-//                    composable<Screens.RegisterScreenRoute> {
-//                        RegistroScreen(navController = navController)
-//                    }
-//                    composable<Screens.ListaArticulosScreenRoute> {
-//                        Scaffold(
-//                            bottomBar = {
-//                                NavigationBar {
-//                                    NavigationBarItem(
-//                                        selected = true,
-//                                        onClick = { /* Acción de navegación */ },
-//                                        icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
-//                                        label = { Text("Inicio") }
-//                                    )
-//                                    // Puedes agregar más items aquí
-//                                }
-//                            }
-//                        ) { paddingValues ->
-//                            ListaArticulosScreenPreviewable(navController = navController)
-//                        }
-//                    }
-//                    composable(
-//                        route = "detalle_articulo/{id}",
-//                        arguments = listOf(navArgument("id") {
-//                            type = NavType.StringType
-//                            nullable = false
-//                        })
-//                    ) { backStackEntry ->
-//                        val id = backStackEntry.arguments?.getString("id")
-//                        DetalleArticuloScreen(articuloId = id.toString())
-//                    }
-//                }
             }
         }
     }
