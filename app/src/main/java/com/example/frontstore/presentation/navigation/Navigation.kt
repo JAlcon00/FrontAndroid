@@ -1,14 +1,8 @@
 package com.example.frontstore.presentation.navigation
 
-import kotlinx.serialization.Serializable
+object Screens {
 
-sealed class Screens() {
-    @Serializable
-    object LoginScreenRoute : Screens()
-
-    @Serializable
-    object RegisterScreenRoute : Screens()
-
-    @Serializable
-    object ListaArticulosScreenRoute : Screens()
+    const val LoginScreenRoute = "login_screen"
+    const val RegisterScreenRoute = "register_Screen"
+    const val ListaArticulosScreenRoute = "lista_articulos_screen"
 }

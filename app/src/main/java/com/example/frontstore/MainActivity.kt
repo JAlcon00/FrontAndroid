@@ -13,6 +13,11 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -65,41 +70,87 @@ class MainActivity : ComponentActivity() {
         setContent {
             FrontStoreTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
-                    composable<Screens.LoginScreenRoute> {
-                        LoginScreen(navController = navController)
-                    }
-                    composable<Screens.RegisterScreenRoute> {
-                        RegistroScreen(navController = navController)
-                    }
-                    composable<Screens.ListaArticulosScreenRoute> {
-                        Scaffold(
-                            bottomBar = {
-                                NavigationBar {
-                                    NavigationBarItem(
-                                        selected = true,
-                                        onClick = { /* Acción de navegación */ },
-                                        icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
-                                        label = { Text("Inicio") }
-                                    )
-                                    // Puedes agregar más items aquí
-                                }
+                var currentRoute by remember { mutableStateOf<String?>(null) }
+
+                Scaffold(
+                    bottomBar = {
+                        if (currentRoute != null &&
+                            currentRoute != Screens.LoginScreenRoute &&
+                            currentRoute != Screens.RegisterScreenRoute) {
+                            NavigationBar {
+                                NavigationBarItem(
+                                    selected = true,
+                                    onClick = { /* Acción de navegación */ },
+                                    icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+                                    label = { Text("Inicio") }
+                                )
+                                // Agrega más items si es necesario
                             }
-                        ) { paddingValues ->
-                            ListaArticulosScreenPreviewable(navController = navController)
                         }
                     }
-                    composable(
-                        route = "detalle_articulo/{id}",
-                        arguments = listOf(navArgument("id") {
-                            type = NavType.StringType
-                            nullable = false
-                        })
-                    ) { backStackEntry ->
-                        val id = backStackEntry.arguments?.getString("id")
-                        DetalleArticuloScreen(articuloId = id.toString())
+                ) {
+                    NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
+                        composable(Screens.LoginScreenRoute) {
+                            LoginScreen(navController = navController)
+                            currentRoute = Screens.LoginScreenRoute
+                        }
+                        composable(Screens.RegisterScreenRoute) {
+                            RegistroScreen(navController = navController)
+                            currentRoute = Screens.RegisterScreenRoute
+                        }
+                        composable(Screens.ListaArticulosScreenRoute) {
+                            ListaArticulosScreenPreviewable(navController = navController)
+                            currentRoute = Screens.ListaArticulosScreenRoute
+                        }
+                        composable(
+                            route = "detalle_articulo/{id}",
+                            arguments = listOf(navArgument("id") {
+                                type = NavType.StringType
+                                nullable = false
+                            })
+                        ) { backStackEntry ->
+                            val id = backStackEntry.arguments?.getString("id")
+                            currentRoute = "detalle_articulo/$id"
+                            DetalleArticuloScreen(articuloId = id.toString())
+                        }
                     }
                 }
+
+//                NavHost(navController = navController, startDestination = Screens.LoginScreenRoute) {
+//                    composable<Screens.LoginScreenRoute> {
+//                        LoginScreen(navController = navController)
+//                    }
+//                    composable<Screens.RegisterScreenRoute> {
+//                        RegistroScreen(navController = navController)
+//                    }
+//                    composable<Screens.ListaArticulosScreenRoute> {
+//                        Scaffold(
+//                            bottomBar = {
+//                                NavigationBar {
+//                                    NavigationBarItem(
+//                                        selected = true,
+//                                        onClick = { /* Acción de navegación */ },
+//                                        icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+//                                        label = { Text("Inicio") }
+//                                    )
+//                                    // Puedes agregar más items aquí
+//                                }
+//                            }
+//                        ) { paddingValues ->
+//                            ListaArticulosScreenPreviewable(navController = navController)
+//                        }
+//                    }
+//                    composable(
+//                        route = "detalle_articulo/{id}",
+//                        arguments = listOf(navArgument("id") {
+//                            type = NavType.StringType
+//                            nullable = false
+//                        })
+//                    ) { backStackEntry ->
+//                        val id = backStackEntry.arguments?.getString("id")
+//                        DetalleArticuloScreen(articuloId = id.toString())
+//                    }
+//                }
             }
         }
     }
