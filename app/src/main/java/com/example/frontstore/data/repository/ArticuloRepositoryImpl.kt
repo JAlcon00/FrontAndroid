@@ -28,9 +28,9 @@ class ArticuloRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getArticuloById(id: String): Articulo {
+    override suspend fun getArticuloById(id: String): ArticuloDto {
         val dto = api.getArticuloById(id)
-        return Articulo(
+        return ArticuloDto(
             _id = dto._id,
             nombre = dto.nombre,
             descripcion = dto.descripcion,

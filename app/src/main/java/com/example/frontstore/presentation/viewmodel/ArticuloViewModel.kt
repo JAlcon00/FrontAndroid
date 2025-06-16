@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontstore.domain.model.Articulo
+import com.example.frontstore.domain.upercase.GetArticuloByIdUseCase
 import com.example.frontstore.domain.upercase.GetArticulosPorCategoriaUseCase
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,17 +18,47 @@ import javax.inject.Inject
 @HiltViewModel
 class ArticuloViewModel @Inject constructor(
     private val getArticulosUseCase: GetArticulosUseCase,
-    private val getArticulosPorCategoriaUseCase: GetArticulosPorCategoriaUseCase
+    private val getArticulosPorCategoriaUseCase: GetArticulosPorCategoriaUseCase,
+    private val getArticuloByIdUseCase : GetArticuloByIdUseCase
 ) : ViewModel() {
 
     private val _articulos = MutableStateFlow<List<Articulo>>(emptyList())
     val articulos: StateFlow<List<Articulo>> = _articulos.asStateFlow()
+
+    private val _articulo = MutableStateFlow<Articulo?>(null)
+    val articulo: StateFlow<Articulo?> = _articulo.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
+
+    fun loadArticuloById(id: String) {
+        viewModelScope.launch {
+            _loading.value = true
+            _error.value = null
+            try {
+                val articuloDto = getArticuloByIdUseCase(id = id)
+                _articulo.value = Articulo(
+                    _id = articuloDto._id,
+                    nombre = articuloDto.nombre,
+                    descripcion = articuloDto.descripcion,
+                    precio = articuloDto.precio,
+                    stock = articuloDto.stock,
+                    categoria = articuloDto.categoria,
+                    activo = articuloDto.activo,
+                    imagenes = articuloDto.imagenes,
+                    fechaCreacion = articuloDto.fechaCreacion
+                )
+            } catch (e: Exception) {
+                Log.e("ArticuloViewModel", "Error al cargar artículo por ID: ${e.message}", e)
+                _error.value = e.message ?: "Error al cargar artículo"
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
 
     fun loadArticulos() {
         viewModelScope.launch {

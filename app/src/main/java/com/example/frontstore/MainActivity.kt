@@ -103,7 +103,7 @@ class MainActivity : ComponentActivity() {
                             currentRoute = Screens.ListaArticulosScreenRoute
                         }
                         composable(
-                            route = "detalle_articulo/{id}",
+                            route = "articulo/{id}",
                             arguments = listOf(navArgument("id") {
                                 type = NavType.StringType
                                 nullable = false

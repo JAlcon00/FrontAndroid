@@ -10,9 +10,9 @@ interface ArticuloRepository {
     @GET("articulos")
     suspend fun getArticulos(): List<ArticuloDto>
 
-    suspend fun getArticuloById(id: String): Articulo {
-        return TODO("Provide the return value")
-    }
+    @GET("articulos/{id}")
+    suspend fun getArticuloById(id: String): ArticuloDto
+
     suspend fun getArticulosPorCategoria(categoriaId: String): List<Articulo> {
         return TODO("Provide the return value")
     }

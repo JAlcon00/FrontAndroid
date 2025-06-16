@@ -104,8 +104,9 @@ fun ListaArticulosScreenPreviewable(
         categoriaViewModel.loadCategorias()
     }
 
-    val articuloRandom = if (articulos.isNotEmpty()) articulos.random() else null
-    Log.d("ListaArticulosScreen", "Artículos cargados: ${articulos.size}, Categorías: ${categorias}")
+    val articuloRandom = remember {
+        if (articulos.isNotEmpty()) articulos.random() else null
+    }
 
     Column(
         modifier = Modifier
@@ -218,7 +219,7 @@ fun ListaArticulosScreenPreviewable(
                     imagenUrl = articulo.imagenes[0],
                     precio = articulo.precio,
                     onClick = {
-                        navController.navigate("detalle_articulo/${articulo._id}")
+                        navController.navigate("articulo/${articulo._id}")
                     }
                 )
             }
