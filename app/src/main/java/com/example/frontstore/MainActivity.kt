@@ -17,10 +17,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -29,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.bitcoinapp.presentation.screens.detalle.DetalleArticuloScreen
+import com.example.frontstore.data.UserPreferences
 import com.example.frontstore.domain.model.Articulo
 import com.example.frontstore.domain.upercase.GetArticulosUseCase
 import com.example.frontstore.presentation.navigation.Screens
@@ -138,9 +141,14 @@ class MainActivity : ComponentActivity() {
                                 type = NavType.StringType
                                 nullable = false
                             })
-                        ) {
+                        ) { backStackEntry ->
+                            val context = LocalContext.current
+                            val userPreferences = remember { UserPreferences.getInstance(context) }
+                            val usuarioIdState = userPreferences.userId.collectAsState(initial = null)
+                            val usuarioId = usuarioIdState.value
                             currentRoute = "clientes/id"
-                            PerfilUsuarioScreen(navController = navController, usuarioId = "")
+
+                            PerfilUsuarioScreen(navController = navController, usuarioId = usuarioId.toString())
                         }
                     }
                 }

@@ -10,9 +10,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
-
-class UserPreferences(context: Context) {
+class UserPreferences private constructor(context: Context) {
 
     private val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
         produceFile = { context.preferencesDataStoreFile("user_preferences") }
@@ -20,6 +18,15 @@ class UserPreferences(context: Context) {
 
     companion object {
         private val USER_ID_KEY = stringPreferencesKey("user_id")
+
+        @Volatile
+        private var INSTANCE: UserPreferences? = null
+
+        fun getInstance(context: Context): UserPreferences {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: UserPreferences(context).also { INSTANCE = it }
+            }
+        }
     }
 
     val userId: Flow<String?> = dataStore.data.map { preferences ->

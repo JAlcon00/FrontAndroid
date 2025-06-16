@@ -109,6 +109,8 @@ fun PerfilUsuarioScreen(
             }
         }
 
+        Text(text = usuarioId)
+
         // Opciones
         PerfilOpcionCard(
             titulo = "Información personal",

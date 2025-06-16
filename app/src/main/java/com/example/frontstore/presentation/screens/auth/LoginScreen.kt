@@ -13,17 +13,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.frontstore.data.UserPreferences
 import com.example.frontstore.presentation.navigation.Screens
 import com.example.frontstore.presentation.viewmodel.AuthViewModel
 import com.example.frontstore.ui.theme.Black
 import com.example.frontstore.ui.theme.DeepPurple
 import com.example.frontstore.ui.theme.PricePurple
 import com.example.frontstore.ui.theme.Violet
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -32,6 +35,11 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val viewModel : AuthViewModel = hiltViewModel()
+    val context = LocalContext.current
+    val userPreferences = UserPreferences.getInstance(context)
+    val coroutineScope = rememberCoroutineScope()
+
+    val usuarioId = viewModel.userId.collectAsState()
 
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -44,6 +52,11 @@ fun LoginScreen(
                 showErrorDialog = true
                 errorMessage = "Credenciales invalidas"
             } else {
+                coroutineScope.launch {
+                    val userId = usuarioId.value
+                    Log.i("LoginScreen", "Usuario logueado con ID: $userId")
+                    userPreferences.saveUserId(userId.toString())
+                }
                 // Esta correcto, navegar a la pantalla principal
                 navController.navigate(Screens.ListaArticulosScreenRoute)
             }

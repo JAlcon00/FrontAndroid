@@ -1,5 +1,6 @@
 package com.example.frontstore.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.frontstore.data.model.loginAuth
@@ -27,6 +28,9 @@ class AuthViewModel @Inject constructor(
     private val _loginEvent = MutableSharedFlow<String>()
     val loginEvent = _loginEvent.asSharedFlow()
 
+    private val _userId = MutableStateFlow<String?>(null)
+    val userId : StateFlow<String?> = _userId.asStateFlow()
+
     fun login(email: String, password: String) {
         val loginAuth = loginAuth(
             email = email,
@@ -38,6 +42,7 @@ class AuthViewModel @Inject constructor(
                 if (response.message == "Login exitoso") {
                     // Login exitoso
                     _loginEvent.emit("Success")
+                    _userId.value = response.cliente.id
                 } else {
                     // Login fallido, emitir mensaje genérico
                     _loginEvent.emit("Credenciales inválidas")
